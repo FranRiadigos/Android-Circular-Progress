@@ -13,6 +13,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ProgressProfileView profile = (ProgressProfileView) findViewById(R.id.profile);
+        profile.setProgress(59.5f);
+        profile.startAnimation();
     }
 
     @Override
