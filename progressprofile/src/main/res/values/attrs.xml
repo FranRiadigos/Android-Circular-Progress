@@ -1,0 +1,15 @@
+<resources>
+    <declare-styleable name="ProgressProfileView">
+        <attr name="max" format="float"/>
+        <attr name="progress" format="float"/>
+        <attr name="backgroundRingSize" format="dimension"/>
+        <attr name="progressRingSize" format="dimension"/>
+        <attr name="backgroundRingColor" format="color|reference"/>
+        <attr name="progressRingColor" format="color|reference"/>
+        <attr name="progressRingCap">
+            <enum name="BUTT" value="0"/>
+            <enum name="ROUND" value="1"/>
+            <enum name="SQUARE" value="2"/>
+        </attr>
+    </declare-styleable>
+</resources>
