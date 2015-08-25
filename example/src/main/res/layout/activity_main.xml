@@ -11,11 +11,12 @@
 
     <com.kuassivi.view.ProgressProfileView
         android:id="@+id/profile"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
         android:layout_centerInParent="true"
+        android:layout_margin="50dp"
         android:src="@drawable/portrait"
         app:progress="42"
         app:progressRingSize="10dp"
