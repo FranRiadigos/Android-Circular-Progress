@@ -26,6 +26,8 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.util.AttributeSet;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
@@ -203,9 +205,9 @@ public class ProgressProfileView extends ImageView {
 
         // Depending on the size ratio, calculate the final size without padding
         if (widthWithoutPadding > heightWithoutPadding) {
-            size = widthWithoutPadding;
-        } else {
             size = heightWithoutPadding;
+        } else {
+            size = widthWithoutPadding;
         }
 
         // Report back the measured size.
@@ -228,10 +230,10 @@ public class ProgressProfileView extends ImageView {
         mViewHeight = h;
 
         setupBounds();
-        setupMask();
         setupBackgroundRingPaint();
         setupProgressRingPaint();
 
+        requestLayout();
         invalidate();
     }
 
@@ -324,7 +326,11 @@ public class ProgressProfileView extends ImageView {
 
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
-        super.onDraw(mCroppedCanvas);    // ImageView
+        if(mMaskPaint == null) {
+            setupMask();
+            // ImageView
+            super.onDraw(mCroppedCanvas);
+        }
 
         // Crop ImageView resource to a circle
         canvas.drawCircle(
