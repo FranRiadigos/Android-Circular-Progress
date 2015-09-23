@@ -17,7 +17,7 @@
         android:adjustViewBounds="true"
         android:layout_centerInParent="true"
         android:layout_margin="50dp"
-        android:src="@drawable/portrait"
+        android:src="@drawable/ic_icon_user_default"
         app:progress="42"
         app:progressRingSize="10dp"
         app:progressRingCap="ROUND"/>
