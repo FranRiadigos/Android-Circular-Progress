@@ -134,4 +134,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 [1]: ./art/portrait.gif
-[2]: ./art/android-studio-preview.gif
+[2]: ./art/android-studio-preview.png
