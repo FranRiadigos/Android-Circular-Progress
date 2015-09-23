@@ -17,9 +17,18 @@
         android:adjustViewBounds="true"
         android:layout_centerInParent="true"
         android:layout_margin="50dp"
-        android:src="@drawable/portrait"
+        tools:src="@drawable/ic_icon_user_default"
         app:progress="42"
         app:progressRingSize="10dp"
         app:progressRingCap="ROUND"/>
+
+    <TextView
+        android:id="@+id/percentage"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/profile"
+        android:layout_centerHorizontal="true"
+        tools:text="Completed: 42%"/>
 
 </RelativeLayout>

@@ -26,8 +26,6 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.support.annotation.NonNull;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.util.AttributeSet;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
@@ -98,7 +96,7 @@ public class ProgressProfileView extends ImageView {
     /*
      * Default interpolator
      */
-    private Interpolator mInterpolator = new OvershootInterpolator();
+    private Interpolator mDefaultInterpolator = new OvershootInterpolator();
 
     /*
      * Default sizes
@@ -179,6 +177,8 @@ public class ProgressProfileView extends ImageView {
             R.styleable.ProgressProfileView_progressRingCap, Paint.Cap.BUTT.ordinal()));
 
         a.recycle();
+
+        setupAnimator();
     }
 
     /**
@@ -296,6 +296,21 @@ public class ProgressProfileView extends ImageView {
         mBackgroundRingPaint.setStrokeWidth(mBackgroundRingSize);
     }
 
+    private void setupAnimator() {
+        mAnimator = ObjectAnimator.ofFloat(
+            this, "progress", this.getProgress(), this.getProgress());
+        mAnimator.setDuration(ANIMATION_DURATION);
+        mAnimator.setInterpolator(mDefaultInterpolator);
+        mAnimator.setStartDelay(ANIMATION_DELAY);
+        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                setCurrentProgress((float) animation.getAnimatedValue());
+                setProgress(getCurrentProgress());
+            }
+        });
+    }
+
     /**
      * It will start animating the progress ring to the progress value set
      * <br>Default animation duration is 1200 milliseconds
@@ -308,19 +323,7 @@ public class ProgressProfileView extends ImageView {
     public void startAnimation() {
         float finalProgress = this.getProgress();
         this.setProgress(this.getCurrentProgress());
-        mAnimator = ObjectAnimator.ofFloat(
-            this, "progress", this.getCurrentProgress(), finalProgress);
-        mAnimator.setDuration(ANIMATION_DURATION);
-        mAnimator.setInterpolator(mInterpolator);
-        mAnimator.setStartDelay(ANIMATION_DELAY);
-        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                setCurrentProgress((float) animation.getAnimatedValue());
-                setProgress(getCurrentProgress());
-                invalidate();
-            }
-        });
+        mAnimator.setFloatValues(this.getCurrentProgress(), finalProgress);
         mAnimator.start();
     }
 
