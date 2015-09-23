@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.kuassivi.view.ProgressProfileView;
 
@@ -15,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ProgressProfileView profile = (ProgressProfileView) findViewById(R.id.profile);
+        profile.getAnimator().setInterpolator(new AccelerateDecelerateInterpolator());
         profile.setProgress(59.5f);
         profile.startAnimation();
     }
