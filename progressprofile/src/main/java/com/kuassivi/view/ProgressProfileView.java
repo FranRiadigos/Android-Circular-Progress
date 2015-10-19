@@ -128,7 +128,8 @@ public class ProgressProfileView extends ImageView {
      * Masks for clipping the current drawable in a circle
      */
     private Paint mMaskPaint;
-    private Canvas mCroppedCanvas;
+    private Bitmap mOriginalBitmap;
+    private Canvas mCacheCanvas;
 
     public ProgressProfileView(Context context) {
         super(context);
@@ -153,7 +154,7 @@ public class ProgressProfileView extends ImageView {
     private void init(AttributeSet attrs, int defStyle) {
         // Load attributes
         final TypedArray a = getContext().obtainStyledAttributes(
-            attrs, R.styleable.ProgressProfileView, defStyle, 0);
+                attrs, R.styleable.ProgressProfileView, defStyle, 0);
 
         setMax(a.getFloat(
             R.styleable.ProgressProfileView_max, mMax));
@@ -213,8 +214,8 @@ public class ProgressProfileView extends ImageView {
         // Report back the measured size.
         // Add pending padding
         setMeasuredDimension(
-            size + getPaddingLeft() + getPaddingRight(),
-            size + getPaddingTop() + getPaddingBottom());
+                size + getPaddingLeft() + getPaddingRight(),
+                size + getPaddingTop() + getPaddingBottom());
     }
 
     /**
@@ -269,11 +270,10 @@ public class ProgressProfileView extends ImageView {
     }
 
     private void setupMask() {
-        Bitmap original = Bitmap.createBitmap(
+        mOriginalBitmap = Bitmap.createBitmap(
             getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-        Shader shader = new BitmapShader(original,
+        Shader shader = new BitmapShader(mOriginalBitmap,
             Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-        mCroppedCanvas = new Canvas(original);
         mMaskPaint = new Paint();
         mMaskPaint.setAntiAlias(true);
         mMaskPaint.setShader(shader);
@@ -329,11 +329,18 @@ public class ProgressProfileView extends ImageView {
 
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
+        // Setup the mask at first
         if(mMaskPaint == null) {
             setupMask();
-            // ImageView
-            super.onDraw(mCroppedCanvas);
         }
+
+        // Cache the canvas
+        if(mCacheCanvas == null) {
+            mCacheCanvas = new Canvas(mOriginalBitmap);
+        }
+
+        // ImageView
+        super.onDraw(mCacheCanvas);
 
         // Crop ImageView resource to a circle
         canvas.drawCircle(

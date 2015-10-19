@@ -9,9 +9,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.ViewTarget;
 import com.kuassivi.view.ProgressProfileView;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,13 +30,7 @@ public class MainActivity extends AppCompatActivity {
             .load("http://lorempixel.com/500/500/people/1")
             .placeholder(R.drawable.ic_icon_user_default)
             .fitCenter() // Fit and center the bitmap
-            .into(new ViewTarget<ProgressProfileView, GlideDrawable>(profile) {
-                @Override
-                public void onResourceReady(GlideDrawable resource, GlideAnimation anim) {
-                    ProgressProfileView mProgressProfile = this.view;
-                    mProgressProfile.setImageDrawable(resource);
-                }
-            });
+            .into(profile);
 
         // Show the current percentage animated
         profile.getAnimator().addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
