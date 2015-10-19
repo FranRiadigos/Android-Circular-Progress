@@ -24,8 +24,7 @@ public class MainActivity extends AppCompatActivity {
         profile.getAnimator().setInterpolator(new AccelerateDecelerateInterpolator());
         profile.setProgress(38.5f);
 
-        // For some reason, Glide does not work fine with a custom ImageView
-        // So just use a ViewTarget
+        // Using Glide as usual
         Glide.with(this)
             .load("http://lorempixel.com/500/500/people/1")
             .placeholder(R.drawable.ic_icon_user_default)
