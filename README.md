@@ -4,6 +4,8 @@ ProgressProfileView
 
 Android custom view to load an avatar or profile image with a progress indicator.
 
+It works on Marshmallow.
+
 ![Portrait][1]
 
 **You can also Preview the result on Android Studio!**
@@ -49,8 +51,6 @@ Add the **ProgressProfileView** component in some place on the layout.
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
-        android:layout_centerInParent="true"
-        android:layout_margin="50dp"
         android:src="@drawable/my_avatar"
         app:progress="42"
         app:progressRingSize="10dp"
@@ -90,19 +90,12 @@ profile.getAnimator().setInterpolator(new AccelerateDecelerateInterpolator());
 
 >If you are loading images from Glide, consider to implement a custom ViewTarget like this one
 ```java
-// For some reason, Glide does not work fine with a custom ImageView
-// So just use a ViewTarget
+// Using Glide as usual
 Glide.with(this)
     .load("http://your/server/path")
     .placeholder(R.drawable.ic_icon_user_default)
     .fitCenter() // Fit and center the bitmap
-    .into(new ViewTarget<ProgressProfileView, GlideDrawable>(profile) {
-        @Override
-        public void onResourceReady(GlideDrawable resource, GlideAnimation anim) {
-            ProgressProfileView mProgressProfile = this.view;
-            mProgressProfile.setImageDrawable(resource);
-        }
-    });
+    .into(profile);
 ```
 
 Features:
