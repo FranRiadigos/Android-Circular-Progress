@@ -28,7 +28,7 @@ How to:
 If you are working with gradle, add the dependency to your build.gradle file:
 ```groovy
 dependencies{
-    compile 'com.kuassivi.view:progressprofile:1.0.3'
+    compile 'com.kuassivi.view:progressprofile:1.0.4'
 }
 ```
 If you are working with maven, do it into your pom.xml
@@ -36,7 +36,7 @@ If you are working with maven, do it into your pom.xml
 <dependency>
     <groupId>com.kuassivi.view</groupId>
     <artifactId>progressprofile</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <type>aar</type>
 </dependency>
 ```
