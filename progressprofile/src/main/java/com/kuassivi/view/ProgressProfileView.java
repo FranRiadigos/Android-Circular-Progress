@@ -17,6 +17,7 @@ package com.kuassivi.view;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -25,7 +26,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
@@ -76,6 +79,7 @@ public class ProgressProfileView extends ImageView {
      */
     private float mBackgroundRingSize = 40;
     private float mProgressRingSize = mBackgroundRingSize;
+    private boolean mProgressRingOutline = false;
 
     /**
      * Default progress colors
@@ -122,38 +126,47 @@ public class ProgressProfileView extends ImageView {
      * Bounds of the ring
      */
     private RectF mRingBounds;
-    private float mOffsetProgressRingSize;
+    private float mOffsetRingSize;
 
     /*
      * Masks for clipping the current drawable in a circle
      */
     private Paint mMaskPaint;
-    private Canvas mCroppedCanvas;
+    private Bitmap mOriginalBitmap;
+    private Canvas mCacheCanvas;
 
     public ProgressProfileView(Context context) {
         super(context);
     }
 
-    public ProgressProfileView(Context context, AttributeSet attrs) {
+    public ProgressProfileView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(attrs, 0);
+        init(attrs, 0, 0);
     }
 
-    public ProgressProfileView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init(attrs, defStyle);
+    public ProgressProfileView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(attrs, defStyleAttr, 0);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public ProgressProfileView(Context context, @Nullable AttributeSet attrs, int defStyleAttr,
+                     int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init(attrs, defStyleAttr, defStyleRes);
     }
 
     /**
      * Parse attributes
      *
      * @param attrs AttributeSet
-     * @param defStyle int
+     * @param defStyleAttr int
+     * @param defStyleRes int
      */
-    private void init(AttributeSet attrs, int defStyle) {
+    private void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         // Load attributes
         final TypedArray a = getContext().obtainStyledAttributes(
-            attrs, R.styleable.ProgressProfileView, defStyle, 0);
+                attrs, R.styleable.ProgressProfileView, defStyleAttr, defStyleRes);
 
         setMax(a.getFloat(
             R.styleable.ProgressProfileView_max, mMax));
@@ -163,12 +176,16 @@ public class ProgressProfileView extends ImageView {
             if (a.hasValue(R.styleable.ProgressProfileView_progressRingSize)) {
                 setProgressRingSize(a.getDimension(
                     R.styleable.ProgressProfileView_progressRingSize, mProgressRingSize));
-                setBackgroundRingSize(getProgressRingSize());
+                setBackgroundRingSize(mProgressRingSize);
             }
         } else {
             setBackgroundRingSize(a.getDimension(
                 R.styleable.ProgressProfileView_backgroundRingSize, mBackgroundRingSize));
+            setProgressRingSize(a.getDimension(
+                    R.styleable.ProgressProfileView_progressRingSize, mProgressRingSize));
         }
+        setProgressRingOutline(
+                a.getBoolean(R.styleable.ProgressProfileView_progressRingOutline, false));
         setBackgroundRingColor(a.getColor(
             R.styleable.ProgressProfileView_backgroundRingColor, mBackgroundRingColor));
         setProgressRingColor(a.getColor(
@@ -213,8 +230,8 @@ public class ProgressProfileView extends ImageView {
         // Report back the measured size.
         // Add pending padding
         setMeasuredDimension(
-            size + getPaddingLeft() + getPaddingRight(),
-            size + getPaddingTop() + getPaddingBottom());
+                size + getPaddingLeft() + getPaddingRight(),
+                size + getPaddingTop() + getPaddingBottom());
     }
 
     /**
@@ -228,6 +245,15 @@ public class ProgressProfileView extends ImageView {
         // Save current view dimensions
         mViewWidth = w;
         mViewHeight = h;
+
+        // Apply ring as outline
+        if(isProgressRingOutline()) {
+            setPadding(
+                    Float.valueOf(mBackgroundRingSize + getPaddingLeft()).intValue(),
+                    Float.valueOf(mBackgroundRingSize + getPaddingTop()).intValue(),
+                    Float.valueOf(mBackgroundRingSize + getPaddingRight()).intValue(),
+                    Float.valueOf(mBackgroundRingSize + getPaddingBottom()).intValue());
+        }
 
         setupBounds();
         setupBackgroundRingPaint();
@@ -248,32 +274,42 @@ public class ProgressProfileView extends ImageView {
         int xOffset = mViewWidth - minValue;
         int yOffset = mViewHeight - minValue;
 
+
+        // Apply ring as outline
+        int outline = 0;
+        if(isProgressRingOutline()) {
+            outline = Float.valueOf(-mBackgroundRingSize).intValue();
+        }
+
         // Save padding plus offset
-        mPaddingTop = this.getPaddingTop() + (yOffset / 2);
-        mPaddingBottom = this.getPaddingBottom() + (yOffset / 2);
-        mPaddingLeft = this.getPaddingLeft() + (xOffset / 2);
-        mPaddingRight = this.getPaddingRight() + (xOffset / 2);
+        mPaddingTop = outline + this.getPaddingTop() + (yOffset / 2);
+        mPaddingBottom = outline + this.getPaddingBottom() + (yOffset / 2);
+        mPaddingLeft = outline + this.getPaddingLeft() + (xOffset / 2);
+        mPaddingRight = outline + this.getPaddingRight() + (xOffset / 2);
+
+        // Bigger ring size
+        float biggerRingSize = mBackgroundRingSize > mProgressRingSize
+                ? mBackgroundRingSize : mProgressRingSize;
 
         // Save the half of the progress ring
-        mOffsetProgressRingSize = mProgressRingSize / 2;
+        mOffsetRingSize = biggerRingSize / 2;
 
         int width = getWidth();
         int height = getHeight();
 
         // Create the ring bounds Rect
         mRingBounds = new RectF(
-            mPaddingLeft + mOffsetProgressRingSize,
-            mPaddingTop + mOffsetProgressRingSize,
-            width - mPaddingRight - mOffsetProgressRingSize,
-            height - mPaddingBottom - mOffsetProgressRingSize);
+            mPaddingLeft + mOffsetRingSize,
+            mPaddingTop + mOffsetRingSize,
+            width - mPaddingRight - mOffsetRingSize,
+            height - mPaddingBottom - mOffsetRingSize);
     }
 
     private void setupMask() {
-        Bitmap original = Bitmap.createBitmap(
+        mOriginalBitmap = Bitmap.createBitmap(
             getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-        Shader shader = new BitmapShader(original,
+        Shader shader = new BitmapShader(mOriginalBitmap,
             Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-        mCroppedCanvas = new Canvas(original);
         mMaskPaint = new Paint();
         mMaskPaint.setAntiAlias(true);
         mMaskPaint.setShader(shader);
@@ -329,18 +365,25 @@ public class ProgressProfileView extends ImageView {
 
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
+        // Setup the mask at first
         if(mMaskPaint == null) {
             setupMask();
-            // ImageView
-            super.onDraw(mCroppedCanvas);
         }
+
+        // Cache the canvas
+        if(mCacheCanvas == null) {
+            mCacheCanvas = new Canvas(mOriginalBitmap);
+        }
+
+        // ImageView
+        super.onDraw(mCacheCanvas);
 
         // Crop ImageView resource to a circle
         canvas.drawCircle(
-            mRingBounds.centerX(),
-            mRingBounds.centerY(),
-            (mRingBounds.width() / 2) - mOffsetProgressRingSize,
-            mMaskPaint);
+                mRingBounds.centerX(),
+                mRingBounds.centerY(),
+                (mRingBounds.width() / 2) - (mBackgroundRingSize / 2),
+                mMaskPaint);
 
         // Draw the background ring
         if (mBackgroundRingSize > 0){
@@ -408,6 +451,22 @@ public class ProgressProfileView extends ImageView {
         mProgressRingSize = progressRingSize;
     }
 
+    public float getBackgroundRingSize() {
+        return mBackgroundRingSize;
+    }
+
+    public void setBackgroundRingSize(float backgroundRingSize) {
+        mBackgroundRingSize = backgroundRingSize;
+    }
+
+    public boolean isProgressRingOutline() {
+        return mProgressRingOutline;
+    }
+
+    public void setProgressRingOutline(boolean progressRingOutline) {
+        mProgressRingOutline = progressRingOutline;
+    }
+
     public int getBackgroundRingColor() {
         return mBackgroundRingColor;
     }
@@ -430,14 +489,6 @@ public class ProgressProfileView extends ImageView {
 
     public void setProgressRingCap(int progressRingCap) {
         mProgressRingCap = getCap(progressRingCap);
-    }
-
-    public float getBackgroundRingSize() {
-        return mBackgroundRingSize;
-    }
-
-    public void setBackgroundRingSize(float backgroundRingSize) {
-        mBackgroundRingSize = backgroundRingSize;
     }
 
     private Paint.Cap getCap(int id) {

@@ -2,6 +2,7 @@ package com.kuassivi.progressprofile;
 
 import android.animation.ValueAnimator;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,9 +10,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.ViewTarget;
 import com.kuassivi.view.ProgressProfileView;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,34 +21,33 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView percentage = (TextView) findViewById(R.id.percentage);
 
-        ProgressProfileView profile = (ProgressProfileView) findViewById(R.id.profile);
+        final ProgressProfileView profile = (ProgressProfileView) findViewById(R.id.profile);
         profile.getAnimator().setInterpolator(new AccelerateDecelerateInterpolator());
-        profile.setProgress(38.5f);
+        profile.setProgress(0);
 
-        // For some reason, Glide does not work fine with a custom ImageView
-        // So just use a ViewTarget
-        Glide.with(this)
-            .load("http://lorempixel.com/500/500/people/1")
-            .placeholder(R.drawable.ic_icon_user_default)
-            .fitCenter() // Fit and center the bitmap
-            .into(new ViewTarget<ProgressProfileView, GlideDrawable>(profile) {
-                @Override
-                public void onResourceReady(GlideDrawable resource, GlideAnimation anim) {
-                    ProgressProfileView mProgressProfile = this.view;
-                    mProgressProfile.setImageDrawable(resource);
-                }
-            });
-
-        // Show the current percentage animated
-        profile.getAnimator().addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int absValue = Float.valueOf(animation.getAnimatedValue().toString()).intValue();
-                percentage.setText("Completed: " + absValue + "%");
-            }
-        });
+            public void run() {
+                profile.setProgress(38.5f);
+                // Using Glide as usual
+                Glide.with(MainActivity.this)
+                        .load("http://lorempixel.com/500/500/people/1")
+                        .placeholder(R.drawable.ic_icon_user_default)
+                        .fitCenter() // Fit and center the bitmap
+                        .into(profile);
 
-        profile.startAnimation();
+                // Show the current percentage animated
+                profile.getAnimator().addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        int absValue = Float.valueOf(animation.getAnimatedValue().toString()).intValue();
+                        percentage.setText("Completed: " + absValue + "%");
+                    }
+                });
+
+                profile.startAnimation();
+            }
+        }, 2000);
     }
 
     @Override
