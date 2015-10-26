@@ -17,10 +17,11 @@
         android:adjustViewBounds="true"
         android:layout_centerInParent="true"
         android:layout_margin="50dp"
-        tools:src="@drawable/ic_icon_user_default"
+        android:src="@drawable/ic_icon_user_default"
         app:progress="42"
         app:progressRingSize="10dp"
-        app:progressRingCap="ROUND"/>
+        app:progressRingCap="ROUND"
+        app:progressRingOutline="true"/>
 
     <TextView
         android:id="@+id/percentage"

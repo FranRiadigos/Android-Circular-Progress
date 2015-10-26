@@ -6,6 +6,7 @@
         <attr name="progressRingSize" format="dimension"/>
         <attr name="backgroundRingColor" format="color|reference"/>
         <attr name="progressRingColor" format="color|reference"/>
+        <attr name="progressRingOutline" format="boolean"/>
         <attr name="progressRingCap">
             <enum name="BUTT" value="0"/>
             <enum name="ROUND" value="1"/>

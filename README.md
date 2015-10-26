@@ -4,13 +4,17 @@ ProgressProfileView
 
 Android custom view to load an avatar or profile image with a progress indicator.
 
-It works on Marshmallow.
+It also works on Marshmallow.
 
 ![Portrait][1]
 
+You can customize the Component as you wish.
+
+![Ring Samples][2]
+
 **You can also Preview the result on Android Studio!**
 
-![Android Studio Preview][2]
+![Android Studio Preview][3]
 
 Background
 ----------
@@ -28,7 +32,7 @@ How to:
 If you are working with gradle, add the dependency to your build.gradle file:
 ```groovy
 dependencies{
-    compile 'com.kuassivi.view:progressprofile:1.0.4'
+    compile 'com.kuassivi.view:progressprofile:1.0.5'
 }
 ```
 If you are working with maven, do it into your pom.xml
@@ -36,7 +40,7 @@ If you are working with maven, do it into your pom.xml
 <dependency>
     <groupId>com.kuassivi.view</groupId>
     <artifactId>progressprofile</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <type>aar</type>
 </dependency>
 ```
@@ -54,7 +58,8 @@ Add the **ProgressProfileView** component in some place on the layout.
         android:src="@drawable/my_avatar"
         app:progress="42"
         app:progressRingSize="10dp"
-        app:progressRingCap="ROUND"/>
+        app:progressRingCap="ROUND"
+        app:progressRingOutline="true"/>
 ```
 
 >Get the object on your activity or fragment.
@@ -88,15 +93,16 @@ profile.getAnimator().addUpdateListener(new AnimatorUpdateListener());
 profile.getAnimator().setInterpolator(new AccelerateDecelerateInterpolator());
 ```
 
->If you are loading images from Glide, consider to implement a custom ViewTarget like this one
+>If you are loading images with Glide or Picasso, do it as usual
 ```java
 // Using Glide as usual
 Glide.with(this)
     .load("http://your/server/path")
     .placeholder(R.drawable.ic_icon_user_default)
-    .fitCenter() // Fit and center the bitmap
     .into(profile);
 ```
+
+> Be careful when using `fitCenter()` method of Glide, or any other similar kind of method, because it will scale the bitmap, and the Progress Profile component will loose its original bounds!
 
 Features:
 ---------
@@ -108,6 +114,7 @@ Features:
  *     `app:backgroundRingColor="@color/my_color"` - Set the color of the background ring (it can be an hex color as well)
  *     `app:progressRingColor="@color/my_color"` - Set the color of the progress ring (it can be an hex color as well)
  *     `app:progressRingCap="BUTT"` - Set the cap style of the progress ring (Possible values: BUTT, ROUND, SQUARE)
+ *     `app:progressRingOutline="true"` - Set the ring as an Outline based on the padding of the ImageView, by default is `false`.
  
 License
 -------
@@ -127,4 +134,5 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 [1]: ./art/portrait.gif
-[2]: ./art/android-studio-preview.png
+[2]: ./art/ring-samples.png
+[3]: ./art/android-studio-preview.png
