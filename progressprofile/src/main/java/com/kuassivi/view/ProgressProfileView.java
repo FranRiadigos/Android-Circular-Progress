@@ -135,6 +135,11 @@ public class ProgressProfileView extends ImageView {
     private Bitmap mOriginalBitmap;
     private Canvas mCacheCanvas;
 
+	/*
+     * Staring position of progress by angle
+     */
+    private int progressStartAngel ;
+	
     public ProgressProfileView(Context context) {
         super(context);
     }
@@ -184,6 +189,10 @@ public class ProgressProfileView extends ImageView {
             setProgressRingSize(a.getDimension(
                     R.styleable.ProgressProfileView_progressRingSize, mProgressRingSize));
         }
+		
+	    //added by Soroush
+        setProgressStartAngel(a.getInteger(R.styleable.ProgressProfileView_progressStartAngel,-90));
+		
         setProgressRingOutline(
                 a.getBoolean(R.styleable.ProgressProfileView_progressRingOutline, false));
         setBackgroundRingColor(a.getColor(
@@ -391,7 +400,7 @@ public class ProgressProfileView extends ImageView {
         }
         // Draw the progress ring
         if(mProgressRingSize > 0) {
-            canvas.drawArc(mRingBounds, -90, getSweepAngle(), false, mProgressRingPaint);
+            canvas.drawArc(mRingBounds, progressStartAngel , getSweepAngle(), false, mProgressRingPaint);
         }
     }
 
@@ -499,4 +508,9 @@ public class ProgressProfileView extends ImageView {
         }
         return Paint.Cap.BUTT;
     }
+	
+	    private void setProgressStartAngel (int angel){
+        progressStartAngel = angel ;
+    }
+	
 }
