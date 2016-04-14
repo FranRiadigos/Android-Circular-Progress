@@ -1,5 +1,10 @@
 package com.kuassivi.progressprofile;
 
+import com.bumptech.glide.Glide;
+import com.kuassivi.view.ProgressProfileView;
+
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,9 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.kuassivi.view.ProgressProfileView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
                 Glide.with(MainActivity.this)
                         .load("http://lorempixel.com/500/500/people/1")
                         .placeholder(R.drawable.ic_icon_user_default)
-                        .fitCenter() // Fit and center the bitmap
                         .into(profile);
 
                 // Show the current percentage animated
@@ -46,6 +47,16 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 profile.startAnimation();
+
+                profile.getAnimator().addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        Glide.with(MainActivity.this)
+                                .load("http://lorempixel.com/500/500/people/2")
+                                .placeholder(R.drawable.ic_icon_user_default)
+                                .into(profile);
+                    }
+                });
             }
         }, 2000);
     }
