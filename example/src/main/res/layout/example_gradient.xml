@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="false"
-                tools:text="Ring corners rounded without outlined image."
+                tools:text="Gradient progress with default corners."
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:lines="3"
@@ -39,10 +39,11 @@
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
                 tools:src="@drawable/ic_icon_user_default"
-                app:progress="12"
+                app:progress="65"
                 app:progressRingSize="15dp"
-                app:progressRingCorner="ROUND"
-                app:progressRingOutline="false"/>
+                app:progressRingOutline="true"
+                app:backgroundRingColor="@android:color/darker_gray"
+                app:progressGradient="@array/gradient"/>
 
         </LinearLayout>
 
@@ -57,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="false"
-                tools:text="Default ring corners with outlined image."
+                tools:text="Max progress reached with default gradient factor."
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:lines="3"
@@ -69,9 +70,11 @@
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
                 tools:src="@drawable/ic_icon_user_default"
-                app:progress="22"
-                app:progressRingSize="20dp"
-                app:progressRingOutline="true"/>
+                app:progress="100"
+                app:progressRingSize="15dp"
+                app:progressRingOutline="true"
+                app:backgroundRingColor="@android:color/darker_gray"
+                app:progressGradient="@array/gradient"/>
 
         </LinearLayout>
 
@@ -94,7 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="false"
-                tools:text="Background size bigger than progress size."
+                tools:text="Gradient progress with rounded corners."
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:lines="3"
@@ -106,12 +109,14 @@
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
                 tools:src="@drawable/ic_icon_user_default"
-                app:progress="32"
-                app:backgroundRingSize="20dp"
-                app:progressRingSize="5dp"
+                app:progress="65"
+                app:progressRingCorner="ROUND"
+                app:progressRingSize="15dp"
                 app:progressRingOutline="true"
-                app:backgroundRingColor="#79b35c88"
-                app:progressRingColor="#FFB35C88"/>
+                app:progressGradient="@array/gradient"
+                app:backgroundRingColor="@android:color/darker_gray"
+                app:joinGradient="true"
+                app:gradientFactor="5.0"/>
 
         </LinearLayout>
 
@@ -126,7 +131,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="false"
-                tools:text="Background size smaller than progress size."
+                tools:text="Max progress reached with a custom gradient factor."
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:lines="3"
@@ -138,13 +143,14 @@
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
                 tools:src="@drawable/ic_icon_user_default"
-                app:progress="37"
-                app:progressRingSize="20dp"
-                app:backgroundRingSize="5dp"
+                app:progress="100"
                 app:progressRingCorner="ROUND"
-                app:progressRingOutline="false"
-                app:backgroundRingColor="#353362ee"
-                app:progressRingColor="#FF3362EE"/>
+                app:progressRingSize="15dp"
+                app:progressRingOutline="true"
+                app:progressGradient="@array/gradient"
+                app:backgroundRingColor="@android:color/darker_gray"
+                app:joinGradient="true"
+                app:gradientFactor="1.5"/>
 
         </LinearLayout>
 

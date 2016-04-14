@@ -1,38 +1,39 @@
 ProgressProfileView
 ===================
-[![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html)
+[![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![Platform](https://img.shields.io/badge/platform-android-green.svg)](http://developer.android.com/index.html) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-ProgressProfileView-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3333)
 
 Android custom view to load an avatar or profile image with a progress indicator.
 
-It also works on Marshmallow.
+![Portrait][1]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![Ring Samples][2]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![Gradient Samples][3]
 
-![Portrait][1]
+**Preview also on Android Studio!**
 
-You can customize the Component as you wish.
-
-![Ring Samples][2]
-
-**You can also Preview the result on Android Studio!**
-
-![Android Studio Preview][3]
+![Android Studio Preview][4]
 
 Background
 ----------
-**ProgressProfileView** extends ImageView, so you can set xml attributes as usual.
-<br>It will be square measured both on landscape and portrait.
+**ProgressProfileView** inherits from ImageView, so you can set any xml attributes as usual.
 
-***You don't need to transform resources placeholders or loaded images from Picasso or Glide to rounded images!***
+Measured both on landscape and portrait.
+
+***No need to crop to rounded images!***
 
 **ProgressProfileView** will clip proportionally all images loaded.
-<br>Just remember to set `android:scaleType="centerCrop"` on the component.
 
-How to:
-------
+Remember to set `android:scaleType="centerCrop"` and `android:adjustViewBounds="true"`
+
+
+## Dependency
+
+Latest stable version: 
+[![Latest Version](https://api.bintray.com/packages/kuassivi/maven/progress-profile/images/download.svg) ](https://bintray.com/kuassivi/maven/progress-profile/_latestVersion)
+[![Bintray Version](https://img.shields.io/bintray/v/kuassivi/maven/progress-profile.svg)](http://jcenter.bintray.com/com/kuassivi/view/progress-profile/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.kuassivi.view/progress-profile.svg)]()
 
 If you are working with gradle, add the dependency to your build.gradle file:
 ```groovy
 dependencies{
-    compile 'com.kuassivi.view:progressprofile:1.0.5'
+    compile 'com.kuassivi.view:progressprofile:?.?.?'
 }
 ```
 If you are working with maven, do it into your pom.xml
@@ -40,13 +41,17 @@ If you are working with maven, do it into your pom.xml
 <dependency>
     <groupId>com.kuassivi.view</groupId>
     <artifactId>progressprofile</artifactId>
-    <version>1.0.5</version>
+    <version>?.?.?</version>
     <type>aar</type>
 </dependency>
 ```
 
-Add the **ProgressProfileView** component in some place on the layout.
-<br>Set your prefered ImageView attributes on it.
+
+How to:
+-------
+
+Add the **ProgressProfileView** component in the layout.
+<br>Set your preferred ImageView attributes on it.
 
 ```xml
 <com.kuassivi.view.ProgressProfileView
@@ -58,7 +63,7 @@ Add the **ProgressProfileView** component in some place on the layout.
         android:src="@drawable/my_avatar"
         app:progress="42"
         app:progressRingSize="10dp"
-        app:progressRingCap="ROUND"
+        app:progressRingCorner="ROUND"
         app:progressRingOutline="true"/>
 ```
 
@@ -102,19 +107,22 @@ Glide.with(this)
     .into(profile);
 ```
 
-> Be careful when using `fitCenter()` method of Glide, or any other similar kind of method, because it will scale the bitmap, and the Progress Profile component will loose its original bounds!
+> Be careful when using `fitCenter()` method of Glide, Picasso, or any other similar kind of method, because it will re-scale the bitmap, and the Progress Profile component will loose its original bounds!
 
 Features:
 ---------
 
  *     `app:max="100"` - Max value for progress indicator
  *     `app:progress="50"` - Current progress value
- *     `app:backgroundRingSize="20dp"` - Set the size of the background ring (not set, means use the same as the <i>progressRingSize</i>)
- *     `app:progressRingSize="20dp"` - Set the size of the progress ring
- *     `app:backgroundRingColor="@color/my_color"` - Set the color of the background ring (it can be an hex color as well)
- *     `app:progressRingColor="@color/my_color"` - Set the color of the progress ring (it can be an hex color as well)
- *     `app:progressRingCap="BUTT"` - Set the cap style of the progress ring (Possible values: BUTT, ROUND, SQUARE)
- *     `app:progressRingOutline="true"` - Set the ring as an Outline based on the padding of the ImageView, by default is `false`.
+ *     `app:backgroundRingSize="20dp"` - The size of the background ring (not set, means use the same as the <i>progressRingSize</i>)
+ *     `app:progressRingSize="20dp"` - The size of the progress ring
+ *     `app:backgroundRingColor="@color/my_color"` - The color of the background ring (it can be an hex color as well)
+ *     `app:progressRingColor="@color/my_color"` - The color of the progress ring (it can be an hex color as well)
+ *     `app:progressGradient="@array/colors"` - An array of colors for a gradient ring (you must provide an array resource reference) [#23](https://github.com/kuassivi/ProgressProfileView/issues/23)
+ *     `app:joinGradient="true"` - Enabling this you get a gradient smooth on the ring corners
+ *     `app:gradientFactor="1.0"` - Adjust the gradient factor of the ring
+ *     `app:progressRingOutline="true"` - Sets the ring as an Outline based on the padding of the ImageView, by default is `false`.
+ *     `app:progressRingCorner="ROUND"` - Sets the corner style of the progress ring (by default is RECT)
  
 License
 -------
@@ -135,4 +143,5 @@ limitations under the License.
 
 [1]: ./art/portrait.gif
 [2]: ./art/ring-samples.png
-[3]: ./art/android-studio-preview.png
+[3]: ./art/gradient-samples.png
+[4]: ./art/android-studio-preview.png
