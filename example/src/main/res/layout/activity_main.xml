@@ -30,7 +30,6 @@
         app:progress="42"
         app:progressRingCorner="ROUND"
         app:progressRingOutline="true"
-        app:progressRingSize="10dp"
-        app:progressGradient="@array/gradient"/>
+        app:progressRingSize="10dp"/>
 
 </LinearLayout>

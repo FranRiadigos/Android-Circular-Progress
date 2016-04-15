@@ -398,7 +398,7 @@ public class ProgressProfileView extends ImageView {
 
         if (mProgressGradient != null) {
             int[] colors = mProgressGradient;
-            float[] positions = null;
+            float[] positions;
             if (isJoinGradient()) {
                 colors = new int[mProgressGradient.length + 1];
                 positions = new float[colors.length];
@@ -420,11 +420,16 @@ public class ProgressProfileView extends ImageView {
 
             SweepGradient gradient = new SweepGradient(mRingBounds.centerX(),
                                                        mRingBounds.centerY(),
-                                                       colors, positions);
-            Matrix m = new Matrix();
-            m.postRotate(-ANGLE_90);
-            gradient.setLocalMatrix(m);
+                                                       colors, null);
+
             mProgressRingPaint.setShader(gradient);
+            Matrix matrix = new Matrix();
+            mProgressRingPaint.getShader().setLocalMatrix(matrix);
+            matrix.postTranslate(-mRingBounds.centerX(), -mRingBounds.centerY());
+            matrix.postRotate(-ANGLE_90);
+            matrix.postTranslate(mRingBounds.centerX(), mRingBounds.centerY());
+            mProgressRingPaint.getShader().setLocalMatrix(matrix);
+            mProgressRingPaint.setColor(mProgressGradient[0]);
         }
     }
 
