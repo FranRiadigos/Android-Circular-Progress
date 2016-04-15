@@ -24,41 +24,49 @@ public class MainActivity extends AppCompatActivity {
         final TextView percentage = (TextView) findViewById(R.id.percentage);
 
         final ProgressProfileView profile = (ProgressProfileView) findViewById(R.id.profile);
-        profile.getAnimator().setInterpolator(new AccelerateDecelerateInterpolator());
-        profile.setProgress(0);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                profile.setProgress(38.5f);
-                // Using Glide as usual
-                Glide.with(MainActivity.this)
-                        .load("http://lorempixel.com/500/500/people/1")
-                        .placeholder(R.drawable.ic_icon_user_default)
-                        .into(profile);
+        if(profile != null) {
+            profile.getAnimator().setInterpolator(new AccelerateDecelerateInterpolator());
+            profile.setProgress(0);
 
-                // Show the current percentage animated
-                profile.getAnimator().addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        int absValue = Float.valueOf(animation.getAnimatedValue().toString()).intValue();
-                        percentage.setText("Completed: " + absValue + "%");
-                    }
-                });
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    profile.setProgress(78.5f);
+                    // Using Glide as usual
+                    Glide.with(MainActivity.this)
+                         .load("http://lorempixel.com/500/500/people/1")
+                         .placeholder(R.drawable.ic_icon_user_default)
+                         .into(profile);
 
-                profile.startAnimation();
+                    // Show the current percentage animated
+                    profile.getAnimator()
+                           .addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                               @Override
+                               public void onAnimationUpdate(ValueAnimator animation) {
+                                   int absValue = Float
+                                           .valueOf(animation.getAnimatedValue().toString())
+                                           .intValue();
+                                   if(percentage != null) {
+                                       percentage.setText("Completed: " + absValue + "%");
+                                   }
+                               }
+                           });
 
-                profile.getAnimator().addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        Glide.with(MainActivity.this)
-                                .load("http://lorempixel.com/500/500/people/2")
-                                .placeholder(R.drawable.ic_icon_user_default)
-                                .into(profile);
-                    }
-                });
-            }
-        }, 2000);
+                    profile.startAnimation();
+
+                    profile.getAnimator().addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            Glide.with(MainActivity.this)
+                                 .load("http://lorempixel.com/500/500/people/2")
+                                 .placeholder(R.drawable.ic_icon_user_default)
+                                 .into(profile);
+                        }
+                    });
+                }
+            }, 2000);
+        }
     }
 
     @Override

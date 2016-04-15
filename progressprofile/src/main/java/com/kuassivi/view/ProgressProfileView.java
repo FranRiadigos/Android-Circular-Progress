@@ -209,28 +209,58 @@ public class ProgressProfileView extends ImageView {
         setProgressRingColor(a.getColor(
                 R.styleable.ProgressProfileView_progressRingColor, DEFAULT_RING_COLOR));
 
-        if (a.hasValue(R.styleable.ProgressProfileView_progressGradient)) {
-            int[] gradient;
-            int i = 0;
-            try {
-                int resourceId = a
-                        .getResourceId(R.styleable.ProgressProfileView_progressGradient, 0);
-                String[] gradientRes = getResources().getStringArray(resourceId);
-                gradient = new int[gradientRes.length];
-                for (String color : gradientRes) {
-                    gradient[i] = Color.parseColor(color);
-                    i++;
+        try {
+            if (a.hasValue(R.styleable.ProgressProfileView_progressGradient)) {
+                int[] gradient;
+                int i = -1;
+                try {
+                    int resourceId = a
+                            .getResourceId(R.styleable.ProgressProfileView_progressGradient, 0);
+                    if(isInEditMode()) {
+                        String[] gradientRes = getResources().getStringArray(resourceId);
+                        gradient = new int[gradientRes.length];
+                        i = 0;
+                        for (String color : gradientRes) {
+                            gradient[i] = Color.parseColor(color);
+                            i++;
+                        }
+                    } else {
+                        if(!a.getResources().getResourceTypeName(resourceId).equals("array")) {
+                            throw new IllegalArgumentException("Resource is not an array");
+                        }
+                        TypedArray ta = a.getResources().obtainTypedArray(resourceId);
+                        int len = ta.length();
+                        gradient = new int[len];
+                        i = 0;
+                        for (int c = 0; c < len; c++) {
+                            String colorString = ta.getString(c);
+                            if(colorString != null) {
+                                gradient[i] = Color.parseColor(colorString);
+                                i++;
+                            } else {
+                                throw new IllegalArgumentException();
+                            }
+                        }
+                        ta.recycle();
+                    }
+                } catch (IllegalArgumentException e) {
+                    if(i == -1) {
+                        throw e;
+                    }
+                    throw new IllegalArgumentException("Unknown Color at position " + i);
                 }
-            } catch (IllegalArgumentException e1) {
-                throw new IllegalArgumentException("Unknown Color at position " + i);
+
+                setProgressGradient(gradient);
+
+                setJoinGradient(a.getBoolean(R.styleable.ProgressProfileView_joinGradient, false));
+
+                setGradientFactor(
+                        a.getFloat(R.styleable.ProgressProfileView_gradientFactor, 1f));
             }
-
-            setProgressGradient(gradient);
-
-            setJoinGradient(a.getBoolean(R.styleable.ProgressProfileView_joinGradient, false));
-
-            setGradientFactor(
-                    a.getFloat(R.styleable.ProgressProfileView_gradientFactor, 1f));
+        } catch (Exception e) {
+            if(!isInEditMode()) {
+                throw e;
+            }
         }
 
         setProgressRingCorner(a.getInt(
@@ -424,8 +454,8 @@ public class ProgressProfileView extends ImageView {
     /**
      * It will start animating the progress ring to the progress value set
      * <br>Default animation duration is 1200 milliseconds
-     * <br>It starts with a default delay of 500 milliseconds
-     * <br>You can get an instance of the animator with the method {@link
+     * <br/>It starts with a default delay of 500 milliseconds
+     * <br/>You can get an instance of the animator with the method {@link
      * ProgressProfileView#getAnimator()} and Override these values
      *
      * @see ObjectAnimator
@@ -480,7 +510,7 @@ public class ProgressProfileView extends ImageView {
 
     /**
      * Get an instance of the current {@link ObjectAnimator}
-     * <br>You can e.g. add Listeners to it
+     * <br/>You can e.g. add Listeners to it
      *
      * @return {@link ObjectAnimator}
      */
