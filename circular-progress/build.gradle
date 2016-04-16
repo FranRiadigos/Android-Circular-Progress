@@ -1,0 +1,54 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.novoda:bintray-release:$bintray"
+    }
+}
+
+apply plugin: 'com.android.library'
+
+apply plugin: 'com.chattylabs.versioning'
+
+apply from: '../android-buildsystem/android.gradle'
+
+versioning {
+
+    tagPrefix "lib/"
+
+    keywords {
+        major "[upgrade]"
+        minor "[feature]"
+        patch "[bug]", "[patch]"
+    }
+}
+
+apply from: '../android-buildsystem/versioning.gradle'
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Android
+    implementation "androidx.appcompat:appcompat:$appcompat"
+
+    // Dependencies
+    implementation "chattylabs.android:commons:$android_commons"
+}
+
+description = 'Android Circular Progress View'
+ext.website ="https://github.com/FranRiadigos/Android-Circular-Progress"
+apply from: '../android-buildsystem/publish.gradle'
+group = 'com.github.franriadigos.view'
+publish {
+    userOrg = 'kuassivi'
+}
