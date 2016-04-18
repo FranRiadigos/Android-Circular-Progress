@@ -4,7 +4,7 @@
         <attr name="progress" format="float"/>
         <attr name="backgroundRingSize" format="dimension"/>
         <attr name="progressRingSize" format="dimension"/>
-		<attr name="progressStartAngel" format="integer"/>
+		<attr name="startAngel" format="integer"/>
         <attr name="backgroundRingColor" format="color|reference"/>
         <attr name="progressRingColor" format="color|reference"/>
         <attr name="progressRingOutline" format="boolean"/>

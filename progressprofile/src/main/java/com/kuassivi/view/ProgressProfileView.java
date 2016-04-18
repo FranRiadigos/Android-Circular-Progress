@@ -135,10 +135,7 @@ public class ProgressProfileView extends ImageView {
     private Bitmap mOriginalBitmap;
     private Canvas mCacheCanvas;
 
-	/*
-     * Staring position of progress by angle
-     */
-    private int progressStartAngel ;
+    private int startAngel;
 	
     public ProgressProfileView(Context context) {
         super(context);
@@ -190,8 +187,7 @@ public class ProgressProfileView extends ImageView {
                     R.styleable.ProgressProfileView_progressRingSize, mProgressRingSize));
         }
 		
-	    //added by Soroush
-        setProgressStartAngel(a.getInteger(R.styleable.ProgressProfileView_progressStartAngel,-90));
+        setStartAngel(a.getInteger(R.styleable.ProgressProfileView_progressStartAngel, -90));
 		
         setProgressRingOutline(
                 a.getBoolean(R.styleable.ProgressProfileView_progressRingOutline, false));
@@ -400,7 +396,7 @@ public class ProgressProfileView extends ImageView {
         }
         // Draw the progress ring
         if(mProgressRingSize > 0) {
-            canvas.drawArc(mRingBounds, progressStartAngel , getSweepAngle(), false, mProgressRingPaint);
+            canvas.drawArc(mRingBounds, startAngel, getSweepAngle(), false, mProgressRingPaint);
         }
     }
 
@@ -500,6 +496,14 @@ public class ProgressProfileView extends ImageView {
         mProgressRingCap = getCap(progressRingCap);
     }
 
+    public void setStartAngel(int angel){
+        startAngel = angel ;
+    }
+
+    public int getStartAngel() {
+        return startAngel;
+    }
+
     private Paint.Cap getCap(int id) {
         for (Paint.Cap value : Paint.Cap.values()) {
             if (id == value.ordinal()) {
@@ -509,8 +513,6 @@ public class ProgressProfileView extends ImageView {
         return Paint.Cap.BUTT;
     }
 	
-	    private void setProgressStartAngel (int angel){
-        progressStartAngel = angel ;
-    }
+
 	
 }
