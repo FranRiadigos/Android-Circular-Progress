@@ -111,7 +111,7 @@ Features:
  *     `app:progress="50"` - Current progress value
  *     `app:backgroundRingSize="20dp"` - Set the size of the background ring (not set, means use the same as the <i>progressRingSize</i>)
  *     `app:progressRingSize="20dp"` - Set the size of the progress ring
- *     `app:progressStartAngel="90"` - Set the start point for progress level with angel (the default value cause progress start at top.
+ *     `app:startAngel="90"` - Set the start angle of the progress ring (by default it starts at top, -90 degrees)
  *     `app:backgroundRingColor="@color/my_color"` - Set the color of the background ring (it can be an hex color as well)
  *     `app:progressRingColor="@color/my_color"` - Set the color of the progress ring (it can be an hex color as well)
  *     `app:progressRingCap="BUTT"` - Set the cap style of the progress ring (Possible values: BUTT, ROUND, SQUARE)
