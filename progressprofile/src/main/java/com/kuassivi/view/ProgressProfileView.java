@@ -187,7 +187,7 @@ public class ProgressProfileView extends ImageView {
                     R.styleable.ProgressProfileView_progressRingSize, mProgressRingSize));
         }
 		
-        setStartAngel(a.getInteger(R.styleable.ProgressProfileView_progressStartAngel, -90));
+        setStartAngel(a.getInteger(R.styleable.ProgressProfileView_startAngel, -90));
 		
         setProgressRingOutline(
                 a.getBoolean(R.styleable.ProgressProfileView_progressRingOutline, false));
