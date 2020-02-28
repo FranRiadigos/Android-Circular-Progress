@@ -46,9 +46,7 @@ dependencies {
 }
 
 description = 'Android Circular Progress View'
-ext.website ="https://github.com/FranRiadigos/Android-Circular-Progress"
-apply from: '../android-buildsystem/publish.gradle'
 group = 'com.github.franriadigos.view'
-publish {
-    userOrg = 'kuassivi'
-}
+ext.website = 'https://github.com/FranRiadigos/Android-Circular-Progress'
+ext.userOrg = 'kuassivi'
+apply from: '../android-buildsystem/publish.gradle'

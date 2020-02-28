@@ -27,6 +27,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
@@ -109,20 +110,6 @@ public class FrameLayoutCircularProgress extends FrameLayout implements Circular
     private Interpolator mDefaultInterpolator = new OvershootInterpolator();
 
     /*
-     * Default sizes
-     */
-    private int mViewHeight = 0;
-    private int mViewWidth  = 0;
-
-    /*
-     * Default padding
-     */
-    private int mPaddingTop;
-    private int mPaddingBottom;
-    private int mPaddingLeft;
-    private int mPaddingRight;
-
-    /*
      * Paints
      */
     private Paint mProgressRingPaint;
@@ -132,14 +119,6 @@ public class FrameLayoutCircularProgress extends FrameLayout implements Circular
      * Bounds of the ring
      */
     private RectF mRingBounds;
-    private float mOffsetRingSize;
-
-    /*
-     * Masks for clipping the current drawable in a circle
-     */
-    private Paint  mMaskPaint;
-    private Bitmap mOriginalBitmap;
-    private Canvas mCacheCanvas;
 
     public FrameLayoutCircularProgress(Context context) {
         this(context, null);
@@ -156,8 +135,19 @@ public class FrameLayoutCircularProgress extends FrameLayout implements Circular
     public FrameLayoutCircularProgress(@NonNull Context context, @Nullable AttributeSet attrs,
                                        @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        setWillNotDraw(false);
         new AttributesHelper(this).loadFromAttributes(attrs, defStyleAttr, 0);
         setupAnimator();
+
+        // Apply ring as outline
+        if (isProgressRingOutline()) {
+            int paddingSize = (int) Math.max(mBackgroundRingSize, mProgressRingSize);
+            setPadding(
+                    Float.valueOf(paddingSize + getPaddingLeft()).intValue(),
+                    Float.valueOf(paddingSize + getPaddingTop()).intValue(),
+                    Float.valueOf(paddingSize + getPaddingRight()).intValue(),
+                    Float.valueOf(paddingSize + getPaddingBottom()).intValue());
+        }
     }
 
     /**
@@ -168,29 +158,22 @@ public class FrameLayoutCircularProgress extends FrameLayout implements Circular
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // Process complexity measurements
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         // Squared size
         int size;
 
-        // Get getMeasuredWidth() and getMeasuredHeight().
-        int width = getMeasuredWidth();
-        int height = getMeasuredHeight();
-
-        // Remove padding to avoid bad size ratio calculation
-        int widthWithoutPadding = width - getPaddingLeft() - getPaddingRight();
-        int heightWithoutPadding = height - getPaddingTop() - getPaddingBottom();
-
-        // Depending on the size ratio, calculate the final size without padding
-        if (widthWithoutPadding > heightWithoutPadding) {
-            size = heightWithoutPadding;
+        // Obtain size of the unique children and measure this layout accordingly
+        if (getChildCount() > 0) {
+            int minSize = Math.max(getMinimumWidth(), getMinimumHeight());
+            View child = getChildAt(0);
+            size = Math.max(child.getMeasuredWidth(), child.getMeasuredHeight());
+            size = Math.max(minSize, size);
         } else {
-            size = widthWithoutPadding;
+            size = Math.max(getMeasuredWidth(), getMeasuredHeight());
         }
 
         // Report back the measured size.
-        // Add pending padding
         setMeasuredDimension(
                 size + getPaddingLeft() + getPaddingRight(),
                 size + getPaddingTop() + getPaddingBottom());
@@ -204,20 +187,7 @@ public class FrameLayoutCircularProgress extends FrameLayout implements Circular
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        // Save current view dimensions
-        mViewWidth = w;
-        mViewHeight = h;
-
-        // Apply ring as outline
-        if (isProgressRingOutline()) {
-            setPadding(
-                    Float.valueOf(mBackgroundRingSize + getPaddingLeft()).intValue(),
-                    Float.valueOf(mBackgroundRingSize + getPaddingTop()).intValue(),
-                    Float.valueOf(mBackgroundRingSize + getPaddingRight()).intValue(),
-                    Float.valueOf(mBackgroundRingSize + getPaddingBottom()).intValue());
-        }
-
-        setupBounds();
+        setupBounds(w, h);
         setupBackgroundRingPaint();
         setupProgressRingPaint();
 
@@ -228,53 +198,17 @@ public class FrameLayoutCircularProgress extends FrameLayout implements Circular
     /**
      * Set the common bounds of the rings
      */
-    private void setupBounds() {
+    private void setupBounds(int w, int h) {
         // Min value for squared size
-        int minValue = Math.min(mViewWidth, mViewHeight);
-
-        // Calculate the Offset if needed
-        int xOffset = mViewWidth - minValue;
-        int yOffset = mViewHeight - minValue;
-
-        // Apply ring as outline
-        int outline = 0;
-        if (isProgressRingOutline()) {
-            outline = Float.valueOf(-mBackgroundRingSize).intValue();
-        }
-
-        // Save padding plus offset
-        mPaddingTop = outline + this.getPaddingTop() + (yOffset / 2);
-        mPaddingBottom = outline + this.getPaddingBottom() + (yOffset / 2);
-        mPaddingLeft = outline + this.getPaddingLeft() + (xOffset / 2);
-        mPaddingRight = outline + this.getPaddingRight() + (xOffset / 2);
-
-        // Bigger ring size
-        float biggerRingSize = mBackgroundRingSize > mProgressRingSize
-                               ? mBackgroundRingSize
-                               : mProgressRingSize;
-
-        // Save the half of the progress ring
-        mOffsetRingSize = biggerRingSize / 2;
-
-        int width = getWidth();
-        int height = getHeight();
+        float paddingSize = Math.max(mBackgroundRingSize, mProgressRingSize);
+        float paddingOffset = (paddingSize / 2);
 
         // Create the ring bounds Rect
         mRingBounds = new RectF(
-                mPaddingLeft + mOffsetRingSize,
-                mPaddingTop + mOffsetRingSize,
-                width - mPaddingRight - mOffsetRingSize,
-                height - mPaddingBottom - mOffsetRingSize);
-    }
-
-    private void setupMask() {
-        mOriginalBitmap = Bitmap.createBitmap(
-                getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
-        Shader shader = new BitmapShader(mOriginalBitmap,
-                                         Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-        mMaskPaint = new Paint();
-        mMaskPaint.setAntiAlias(true);
-        mMaskPaint.setShader(shader);
+                paddingSize - paddingOffset,
+                paddingSize - paddingOffset,
+                w - paddingOffset,
+                h - paddingOffset);
     }
 
     private void setupProgressRingPaint() {
@@ -364,24 +298,7 @@ public class FrameLayoutCircularProgress extends FrameLayout implements Circular
 
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
-        // Setup the mask at first
-        if (mMaskPaint == null) {
-            setupMask();
-        }
-
-        // Cache the canvas
-        if (mCacheCanvas == null) {
-            mCacheCanvas = new Canvas(mOriginalBitmap);
-        }
-
-        super.onDraw(mCacheCanvas);
-//
-//        // Crop ImageView resource to a circle
-//        canvas.drawCircle(
-//                mRingBounds.centerX(),
-//                mRingBounds.centerY(),
-//                (mRingBounds.width() / 2) - (mBackgroundRingSize / 2),
-//                mMaskPaint);
+        super.onDraw(canvas);
 
         // Draw the background ring
         if (mBackgroundRingSize > 0) {
