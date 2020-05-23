@@ -1,2 +1,1 @@
 include ':demo', ":circular-progress"
-rootProject.name='Android-Circular-Progress'
