@@ -11,7 +11,7 @@ Circular Progress
 ## Dependency
 
 Latest stable version: 
-[![Bintray Version](https://img.shields.io/bintray/v/kuassivi/maven/circular-progress.svg)](http://jcenter.bintray.com/com/kuassivi/maven/circular-progress/)
+[![Bintray Version](https://img.shields.io/bintray/v/kuassivi/maven/android-circular-progress.svg)](http://jcenter.bintray.com/com/kuassivi/maven/android-circular-progress/)
 
 If you are working with gradle, add the dependency to your build.gradle file:
 ```groovy
