@@ -1,5 +1,5 @@
 <resources>
-    <declare-styleable name="CircleProgress">
+    <declare-styleable name="CircularProgress">
         <attr name="max" format="float"/>
         <attr name="progress" format="float"/>
         <attr name="backgroundRingSize" format="dimension"/>

@@ -25,38 +25,38 @@ public class AttributesHelper {
 
     public void loadFromAttributes(@Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes) {
         final TypedArray a = ((View) mView).getContext().obtainStyledAttributes(
-                attrs, R.styleable.CircleProgress, defStyleAttr, defStyleRes);
+                attrs, R.styleable.CircularProgress, defStyleAttr, defStyleRes);
 
         mView.setMax(a.getFloat(
-                R.styleable.CircleProgress_max, mView.getMax()));
+                R.styleable.CircularProgress_max, mView.getMax()));
         mView.setProgress(a.getFloat(
-                R.styleable.CircleProgress_progress, mView.getProgress()));
-        if (!a.hasValue(R.styleable.CircleProgress_backgroundRingSize)) {
-            if (a.hasValue(R.styleable.CircleProgress_progressRingSize)) {
+                R.styleable.CircularProgress_progress, mView.getProgress()));
+        if (!a.hasValue(R.styleable.CircularProgress_backgroundRingSize)) {
+            if (a.hasValue(R.styleable.CircularProgress_progressRingSize)) {
                 mView.setProgressRingSize(a.getDimension(
-                        R.styleable.CircleProgress_progressRingSize, mView.getProgressRingSize()));
+                        R.styleable.CircularProgress_progressRingSize, mView.getProgressRingSize()));
                 mView.setBackgroundRingSize(mView.getProgressRingSize());
             }
         } else {
             mView.setBackgroundRingSize(a.getDimension(
-                    R.styleable.CircleProgress_backgroundRingSize, mView.getBackgroundRingSize()));
+                    R.styleable.CircularProgress_backgroundRingSize, mView.getBackgroundRingSize()));
             mView.setProgressRingSize(a.getDimension(
-                    R.styleable.CircleProgress_progressRingSize, mView.getProgressRingSize()));
+                    R.styleable.CircularProgress_progressRingSize, mView.getProgressRingSize()));
         }
         mView.setProgressRingOutline(
-                a.getBoolean(R.styleable.CircleProgress_progressRingOutline, false));
+                a.getBoolean(R.styleable.CircularProgress_progressRingOutline, false));
         mView.setBackgroundRingColor(a.getColor(
-                R.styleable.CircleProgress_backgroundRingColor, mView.getBackgroundRingColor()));
+                R.styleable.CircularProgress_backgroundRingColor, mView.getBackgroundRingColor()));
         mView.setProgressRingColor(a.getColor(
-                R.styleable.CircleProgress_progressRingColor, CircularProgressContract.DEFAULT_RING_COLOR));
+                R.styleable.CircularProgress_progressRingColor, CircularProgressContract.DEFAULT_RING_COLOR));
 
         try {
-            if (a.hasValue(R.styleable.CircleProgress_progressGradient)) {
+            if (a.hasValue(R.styleable.CircularProgress_progressGradient)) {
                 int[] gradient;
                 int i = -1;
                 try {
                     int resourceId = a
-                            .getResourceId(R.styleable.CircleProgress_progressGradient, 0);
+                            .getResourceId(R.styleable.CircularProgress_progressGradient, 0);
                     if(((View) mView).isInEditMode()) {
                         String[] gradientRes = ((View) mView).getResources().getStringArray(resourceId);
                         gradient = new int[gradientRes.length];
@@ -93,10 +93,10 @@ public class AttributesHelper {
 
                 mView.setProgressGradient(gradient);
 
-                mView.setJoinGradient(a.getBoolean(R.styleable.CircleProgress_joinGradient, false));
+                mView.setJoinGradient(a.getBoolean(R.styleable.CircularProgress_joinGradient, false));
 
                 mView.setGradientFactor(
-                        a.getFloat(R.styleable.CircleProgress_gradientFactor, 1f));
+                        a.getFloat(R.styleable.CircularProgress_gradientFactor, 1f));
             }
         } catch (Exception e) {
             if(! ((View) mView).isInEditMode()) {
@@ -105,7 +105,7 @@ public class AttributesHelper {
         }
 
         mView.setProgressRingCorner(a.getInt(
-                R.styleable.CircleProgress_progressRingCorner, Paint.Cap.BUTT.ordinal()));
+                R.styleable.CircularProgress_progressRingCorner, Paint.Cap.BUTT.ordinal()));
 
         a.recycle();
     }

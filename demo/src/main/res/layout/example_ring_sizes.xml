@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="5dp"
+            android:layout_margin="15dp"
             android:orientation="vertical">
 
             <TextView
@@ -50,7 +50,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="5dp"
+            android:layout_margin="15dp"
             android:orientation="vertical">
 
             <TextView
@@ -87,14 +87,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="5dp"
+            android:layout_margin="15dp"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="false"
-                tools:text="Background size bigger than progress size."
+                tools:text="Background ring size bigger than progress ring size."
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:lines="3"
@@ -119,14 +119,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="5dp"
+            android:layout_margin="15dp"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="false"
-                tools:text="Background size smaller than progress size."
+                tools:text="Background ring size smaller than progress ring size."
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:lines="3"

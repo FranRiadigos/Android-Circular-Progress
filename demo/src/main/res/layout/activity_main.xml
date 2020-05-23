@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        tools:text="Completed: 42%"/>
+        android:text="Completed: 0%"/>
 
     <com.franriadigos.view.ImageViewCircularProgress
         android:id="@+id/profile"
@@ -24,7 +24,6 @@
         android:layout_height="match_parent"
         android:layout_margin="50dp"
         android:adjustViewBounds="true"
-        android:fitsSystemWindows="false"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_icon_user_default"
         app:progress="42"
@@ -36,7 +35,6 @@
         android:id="@+id/frameLayoutCircularProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="150dp"
         android:background="@android:color/holo_orange_light"
         android:padding="10dp"
         app:progress="42"
@@ -49,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@android:color/holo_blue_light"
             android:text="TextView" />
 
     </com.franriadigos.view.FrameLayoutCircularProgress>
