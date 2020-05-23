@@ -1,0 +1,49 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.chattylabs.versioning'
+apply from: '../android-buildsystem/android.gradle'
+
+versioning {
+
+    tagPrefix "demo/"
+
+    keywords {
+        major "[upgrade]"
+        minor "[feature]"
+        patch "[bug]", "[patch]"
+    }
+}
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+    defaultConfig {
+        versionName versioning.name()
+        versionCode versioning.computedVersionCode()
+        applicationId "com.github.franriadigos.android_circular_progress"
+        minSdkVersion 21
+        targetSdkVersion 29
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // Android
+    implementation "androidx.appcompat:appcompat:$appcompat"
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    implementation project(':circular-progress')
+
+    implementation 'androidx.core:core-ktx:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}

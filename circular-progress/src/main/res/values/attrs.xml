@@ -1,0 +1,17 @@
+<resources>
+    <declare-styleable name="CircularProgress">
+        <attr name="max" format="float"/>
+        <attr name="progress" format="float"/>
+        <attr name="backgroundRingSize" format="dimension"/>
+        <attr name="progressRingSize" format="dimension"/>
+        <attr name="backgroundRingColor" format="color|reference"/>
+        <attr name="progressRingColor" format="color|reference"/>
+        <attr name="progressGradient" format="reference"/>
+        <attr name="joinGradient" format="boolean"/>
+        <attr name="gradientFactor" format="float"/>
+        <attr name="progressRingOutline" format="boolean"/>
+        <attr name="progressRingCorner">
+            <enum name="ROUND" value="1"/>
+        </attr>
+    </declare-styleable>
+</resources>
